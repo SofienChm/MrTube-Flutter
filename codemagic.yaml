@@ -34,7 +34,9 @@ workflows:
         script: keychain add-certificates
       - name: Apply provisioning profiles
         script: xcode-project use-profiles
-      - name: Build iOS release
-        script: flutter build ios --release
+      - name: Build iOS release (unsigned)
+        script: flutter build ios --release --no-codesign
+      - name: Create IPA
+        script: xcode-project build-ipa --workspace ios/Runner.xcworkspace --scheme Runner
     artifacts:
       - build/ios/ipa/*.ipa
