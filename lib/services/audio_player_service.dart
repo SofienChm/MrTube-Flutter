@@ -22,7 +22,7 @@ class AudioPlayerService extends ChangeNotifier {
   List<Song> _queue = [];
   int _currentIndex = -1;
   bool _isShuffle = false;
-  RepeatMode _repeatMode = RepeatMode.none;
+  PlaybackRepeatMode _repeatMode = PlaybackRepeatMode.none;
   double _volume = 0.8;
 
   AudioPlayer get player => _player;
@@ -34,7 +34,7 @@ class AudioPlayerService extends ChangeNotifier {
   List<Song> get queue => List.unmodifiable(_queue);
   int get currentIndex => _currentIndex;
   bool get isShuffle => _isShuffle;
-  RepeatMode get repeatMode => _repeatMode;
+  PlaybackRepeatMode get repeatMode => _repeatMode;
   double get volume => _volume;
 
   StreamSubscription? _positionSub;
@@ -72,7 +72,7 @@ class AudioPlayerService extends ChangeNotifier {
   }
 
   void _onSongComplete() {
-    if (_repeatMode == RepeatMode.one) {
+    if (_repeatMode == PlaybackRepeatMode.one) {
       _player.seek(Duration.zero);
       _player.play();
       return;
@@ -88,7 +88,7 @@ class AudioPlayerService extends ChangeNotifier {
 
     if (_currentIndex < _queue.length - 1) {
       play(_queue[_currentIndex + 1]);
-    } else if (_repeatMode == RepeatMode.all) {
+    } else if (_repeatMode == PlaybackRepeatMode.all) {
       play(_queue[0]);
     } else {
       _isPlaying = false;
@@ -197,7 +197,7 @@ class AudioPlayerService extends ChangeNotifier {
       if (idx != -1) play(_queue[idx]);
     } else if (_currentIndex < _queue.length - 1) {
       play(_queue[_currentIndex + 1]);
-    } else if (_repeatMode == RepeatMode.all) {
+    } else if (_repeatMode == PlaybackRepeatMode.all) {
       play(_queue[0]);
     }
   }
@@ -250,8 +250,8 @@ class AudioPlayerService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void cycleRepeatMode() {
-    const modes = [RepeatMode.none, RepeatMode.one, RepeatMode.all];
+  void cyclePlaybackRepeatMode() {
+    const modes = [PlaybackRepeatMode.none, PlaybackRepeatMode.one, PlaybackRepeatMode.all];
     final idx = modes.indexOf(_repeatMode);
     _repeatMode = modes[(idx + 1) % modes.length];
     notifyListeners();
@@ -299,4 +299,4 @@ class AudioPlayerService extends ChangeNotifier {
   }
 }
 
-enum RepeatMode { none, one, all }
+enum PlaybackRepeatMode { none, one, all }

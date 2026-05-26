@@ -227,7 +227,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           onPressed: () => player.next(),
         ),
         IconButton(
-          icon: Icon(Icons.repeat, color: player.repeatMode != RepeatMode.none ? AppColors.primary : AppColors.textSecondary),
+          icon: Icon(Icons.repeat, color: player.repeatMode != PlaybackRepeatMode.none ? AppColors.primary : AppColors.textSecondary),
           onPressed: () => player.cycleRepeatMode(),
         ),
       ],
