@@ -9,6 +9,8 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+      groups:
+        - mrtube
     triggering:
       events:
         - push
