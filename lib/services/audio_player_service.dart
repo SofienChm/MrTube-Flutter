@@ -250,7 +250,7 @@ class AudioPlayerService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void cyclePlaybackRepeatMode() {
+  void cycleRepeatMode() {
     const modes = [PlaybackRepeatMode.none, PlaybackRepeatMode.one, PlaybackRepeatMode.all];
     final idx = modes.indexOf(_repeatMode);
     _repeatMode = modes[(idx + 1) % modes.length];
