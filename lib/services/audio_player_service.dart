@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:dio/dio.dart';
 import '../models/song.dart';
 import '../core/constants/api_endpoints.dart';
 import '../core/storage/local_storage.dart';
@@ -106,38 +105,7 @@ class AudioPlayerService extends ChangeNotifier {
   }
 
   Future<String?> _getAudioUrl(String videoId) async {
-    if (kIsWeb) {
-      return '${ApiEndpoints.baseUrl}/music/stream/$videoId';
-    }
-
-    for (final instance in ApiEndpoints.pipedInstances) {
-      try {
-        final dio = Dio(BaseOptions(
-          connectTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 10),
-        ));
-        final response = await dio.get(
-          '$instance${ApiEndpoints.pipedStreams(videoId)}',
-        );
-        final data = response.data as Map<String, dynamic>;
-        final streams = data['audioStreams'] as List<dynamic>?;
-        if (streams != null && streams.isNotEmpty) {
-          String? bestUrl;
-          int bestBitrate = 0;
-          for (final stream in streams) {
-            final bitrate = stream['bitrate'] as int? ?? 0;
-            if (bitrate > bestBitrate) {
-              bestBitrate = bitrate;
-              bestUrl = stream['url'] as String?;
-            }
-          }
-          if (bestUrl != null) return bestUrl;
-        }
-      } catch (_) {
-        continue;
-      }
-    }
-    return null;
+    return '${ApiEndpoints.baseUrl}/music/stream/$videoId';
   }
 
   Future<void> play(Song song) async {
