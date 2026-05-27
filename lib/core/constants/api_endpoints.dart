@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 class ApiEndpoints {
   static String get baseUrl {
+    const prodUrl = String.fromEnvironment('BASE_URL');
+    if (prodUrl.isNotEmpty) return prodUrl;
     if (kIsWeb) {
       return 'http://localhost:3000';
     }
