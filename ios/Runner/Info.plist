@@ -30,7 +30,9 @@
 		<string>fetch</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>StreamFlow needs local network access to communicate with the server on your local network.</string>
+	<string>MrTube needs local network access to communicate with the server on your local network.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access may be used by audio playback components for media processing.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
