@@ -35,7 +35,7 @@ workflows:
       - name: Apply provisioning profiles
         script: xcode-project use-profiles
       - name: Build IPA
-        script: flutter build ipa --release --export-method app-store --build-number $BUILD_NUMBER
+        script: flutter build ipa --release --export-method app-store
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
