@@ -80,8 +80,8 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final data = await _apiClient.get(ApiEndpoints.related(videoId));
-      _related = (data['data'] as List<dynamic>? ?? [])
+      final data = await _apiClient.getList(ApiEndpoints.related(videoId));
+      _related = data
           .map((e) => Song.fromJson(e as Map<String, dynamic>))
           .toList();
       _errorMessage = null;

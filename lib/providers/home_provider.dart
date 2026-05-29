@@ -3,6 +3,7 @@ import '../models/song.dart';
 import '../core/network/api_client.dart';
 import '../core/constants/api_endpoints.dart';
 import '../core/storage/local_storage.dart';
+import '../services/location_service.dart';
 
 class HomeProvider extends ChangeNotifier {
   final ApiClient _apiClient = ApiClient();
@@ -57,7 +58,8 @@ class HomeProvider extends ChangeNotifier {
 
   Future<List<Song>> _loadTrending() async {
     try {
-      final data = await _apiClient.getList(ApiEndpoints.trending);
+      final region = await LocationService().getCountry();
+      final data = await _apiClient.getList(ApiEndpoints.trending(region: region));
       return data
           .map((e) => Song.fromJson(e as Map<String, dynamic>))
           .toList();

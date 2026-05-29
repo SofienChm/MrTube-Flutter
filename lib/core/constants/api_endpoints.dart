@@ -7,12 +7,14 @@ class ApiEndpoints {
     if (kIsWeb) {
       return 'http://localhost:3000';
     }
-    return 'http://192.168.1.181:3000';
+    return 'http://100.89.232.15:8086';
   }
 
   static String get register => '$baseUrl/auth/register';
   static String get login => '$baseUrl/auth/login';
-  static String get trending => '$baseUrl/music/trending';
+  static String trending({String? region}) => region != null
+      ? '$baseUrl/music/trending?region=${Uri.encodeComponent(region)}'
+      : '$baseUrl/music/trending';
   static String get playlist => '$baseUrl/playlist';
   static String get recentlyPlayed => '$baseUrl/recently-played';
 

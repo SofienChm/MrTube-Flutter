@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/icon/icon.png', width: 80, height: 80, errorBuilder: (_, __, ___) => const Icon(Icons.music_note, size: 80, color: AppColors.primary)),
+                  Image.asset('assets/mt.png', width: 80, height: 80, errorBuilder: (_, __, ___) => const Icon(Icons.music_note, size: 80, color: AppColors.primary)),
                   const SizedBox(height: 16),
                   const Text('MrTube', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                   const SizedBox(height: 8),
