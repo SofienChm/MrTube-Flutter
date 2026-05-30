@@ -22,15 +22,19 @@ void main() async {
   MrTubeAudioHandler? audioHandler;
 
   if (!kIsWeb) {
-    audioHandler = MrTubeAudioHandler(audioService);
-    await AudioService.init(
-      builder: () => audioHandler!,
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.mrtube.audio',
-        androidNotificationChannelName: 'MrTube',
-        androidNotificationOngoing: true,
-      ),
-    );
+    try {
+      audioHandler = MrTubeAudioHandler(audioService);
+      await AudioService.init(
+        builder: () => audioHandler!,
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.mrtube.audio',
+          androidNotificationChannelName: 'MrTube',
+          androidNotificationOngoing: true,
+        ),
+      );
+    } catch (e) {
+      debugPrint('AudioService init failed (background audio disabled): $e');
+    }
   }
 
   runApp(MrTubeApp(audioService: audioService, audioHandler: audioHandler));
