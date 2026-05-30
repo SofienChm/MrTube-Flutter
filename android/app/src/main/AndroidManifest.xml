@@ -31,6 +31,13 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <service android:name="com.ryanheise.audioservice.AudioService"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="android.media.browse.MediaBrowserService" />
+        </intent-filter>
+    </service>
+
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
