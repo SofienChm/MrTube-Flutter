@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../core/constants/app_colors.dart';
 
-class SkeletonWidget extends StatefulWidget {
+class SkeletonWidget extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
@@ -14,42 +15,18 @@ class SkeletonWidget extends StatefulWidget {
   });
 
   @override
-  State<SkeletonWidget> createState() => _SkeletonWidgetState();
-}
-
-class _SkeletonWidgetState extends State<SkeletonWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, __) {
-        return Container(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            color: AppColors.surface,
-          ),
-        );
-      },
+    return Shimmer.fromColors(
+      baseColor: AppColors.surface,
+      highlightColor: AppColors.card,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          color: AppColors.surface,
+        ),
+      ),
     );
   }
 }

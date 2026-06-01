@@ -24,6 +24,8 @@ class ApiEndpoints {
   static String recommendations(String videoIds) =>
       '$baseUrl/music/recommendations?videoIds=$videoIds';
   static String get quickPicks => '$baseUrl/music/quick-picks';
+  static String personalizedPicks(String videoIds) =>
+      '$baseUrl/music/personalized-picks?videoIds=$videoIds';
 
   static String details(String videoId) =>
       '$baseUrl/music/details/$videoId';

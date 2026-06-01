@@ -19,7 +19,14 @@ class LocationService {
       _cachedCountry = response.data['country'] as String?;
       return _cachedCountry;
     } catch (_) {
-      return null;
+      // fallback: try HTTP
+      try {
+        final response = await _dio.get('http://ip-api.com/json/');
+        _cachedCountry = response.data['country'] as String?;
+        return _cachedCountry;
+      } catch (_) {
+        return null;
+      }
     }
   }
 }

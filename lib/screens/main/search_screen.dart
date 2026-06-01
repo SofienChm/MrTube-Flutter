@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/search_provider.dart';
+import '../../providers/library_provider.dart';
+import '../../providers/player_provider.dart';
 import '../../services/audio_player_service.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/song.dart';
@@ -164,6 +166,7 @@ class _SearchScreenState extends State<SearchScreen> {
               title: const Text('Partager', style: TextStyle(color: AppColors.textPrimary)),
               onTap: () {
                 Navigator.pop(ctx);
+                context.read<PlayerProvider>().shareSong(song);
               },
             ),
           ],
@@ -174,18 +177,58 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 void _showPlaylistPicker(BuildContext context, Song song) {
-  showDialog(
+  final library = context.read<LibraryProvider>();
+  library.loadPlaylists();
+  showModalBottomSheet(
     context: context,
-    builder: (ctx) => AlertDialog(
-      backgroundColor: AppColors.card,
-      title: const Text('Ajouter à une playlist', style: TextStyle(color: AppColors.textPrimary)),
-      content: const Text('Fonctionnalité à venir', style: TextStyle(color: AppColors.textSecondary)),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(ctx),
-          child: const Text('Fermer'),
-        ),
-      ],
+    backgroundColor: AppColors.card,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('Ajouter à une playlist', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+          ),
+          Consumer<LibraryProvider>(
+            builder: (_, lib, __) {
+              if (lib.isLoading) {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                );
+              }
+              if (lib.playlists.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('Aucune playlist', style: TextStyle(color: AppColors.textSecondary)),
+                );
+              }
+              return Column(
+                children: lib.playlists.map((p) => ListTile(
+                  leading: const Icon(Icons.playlist_play, color: AppColors.textPrimary),
+                  title: Text(p.name, style: const TextStyle(color: AppColors.textPrimary)),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    final ok = await context.read<PlayerProvider>().addToPlaylist(
+                      p.id, song,
+                    );
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(ok ? 'Ajouté à ${p.name}' : 'Erreur lors de l\'ajout'),
+                          backgroundColor: ok ? AppColors.primary : Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                )).toList(),
+              );
+            },
+          ),
+        ],
+      ),
     ),
   );
 }

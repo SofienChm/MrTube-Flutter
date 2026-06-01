@@ -168,10 +168,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return Column(
       children: [
         SliderTheme(
-          data: SliderThemeData(
+          data: const SliderThemeData(
             trackHeight: 4,
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-            overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
+            overlayShape: RoundSliderOverlayShape(overlayRadius: 16),
             activeTrackColor: AppColors.primary,
             inactiveTrackColor: AppColors.surface,
             thumbColor: AppColors.primary,
@@ -240,10 +240,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
         const Icon(Icons.volume_down, color: AppColors.textSecondary, size: 18),
         Expanded(
           child: SliderTheme(
-            data: SliderThemeData(
+            data: const SliderThemeData(
               trackHeight: 3,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
-              overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
+              overlayShape: RoundSliderOverlayShape(overlayRadius: 12),
               activeTrackColor: AppColors.primary,
               inactiveTrackColor: AppColors.surface,
               thumbColor: AppColors.primary,
@@ -290,8 +290,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
         const Text('À suivre', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
         const SizedBox(height: 8),
         if (playerProvider.isLoading)
-          ...List.generate(3, (_) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+          ...List.generate(3, (_) => const Padding(
+            padding: EdgeInsets.only(bottom: 8),
             child: SkeletonWidget(width: double.infinity, height: 48),
           ))
         else if (playerProvider.related.isEmpty)

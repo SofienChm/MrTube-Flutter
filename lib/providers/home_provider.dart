@@ -32,8 +32,8 @@ class HomeProvider extends ChangeNotifier {
 
     try {
       final r0 = _loadTrending();
-      final r3 = _loadQuickPicks();
       final r1 = _loadRecentlyPlayed(isLoggedIn);
+      final r3 = _loadQuickPicks(isLoggedIn);
       await Future.wait([r0, r3, r1]);
       if (gen < _generation) return;
       _trending = await r0;
@@ -101,8 +101,24 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Song>> _loadQuickPicks() async {
+  Future<List<Song>> _loadQuickPicks(bool isLoggedIn) async {
     try {
+      if (isLoggedIn) {
+        List<Song> recent;
+        try {
+          final data = await _apiClient.getList(ApiEndpoints.recentlyPlayed);
+          recent = data.map((e) => Song.fromJson(e as Map<String, dynamic>)).toList();
+        } catch (_) {
+          recent = await _localStorage.getRecentlyPlayed();
+        }
+        final ids = recent.take(5).map((s) => s.videoId).join(',');
+        if (ids.isNotEmpty) {
+          final data = await _apiClient.getList(ApiEndpoints.personalizedPicks(ids));
+          return data
+              .map((e) => Song.fromJson(e as Map<String, dynamic>))
+              .toList();
+        }
+      }
       final data = await _apiClient.getList(ApiEndpoints.quickPicks);
       return data
           .map((e) => Song.fromJson(e as Map<String, dynamic>))

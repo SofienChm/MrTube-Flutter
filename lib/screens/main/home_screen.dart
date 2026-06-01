@@ -67,12 +67,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           Consumer<AuthProvider>(
             builder: (_, auth, __) => Padding(
               padding: const EdgeInsets.only(right: 12),
-              child: CircleAvatar(
-                radius: 16,
-                backgroundColor: AppColors.primary,
-                child: Text(
-                  (auth.currentUser?.name.isNotEmpty == true ? auth.currentUser!.name[0] : 'U').toUpperCase(),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              child: GestureDetector(
+                onTap: () => _showProfileSheet(context, auth),
+                child: CircleAvatar(
+                  radius: 16,
+                  backgroundColor: AppColors.primary,
+                  child: Text(
+                    (auth.currentUser?.name.isNotEmpty == true ? auth.currentUser!.name[0] : 'U').toUpperCase(),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -171,6 +174,59 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void _playSong(BuildContext context, List<Song> songs, int index) {
     context.read<AudioPlayerService>().setQueue(songs, index);
+  }
+
+  void _showProfileSheet(BuildContext context, AuthProvider auth) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 32,
+              backgroundColor: AppColors.primary,
+              child: Text(
+                (auth.currentUser?.name.isNotEmpty == true ? auth.currentUser!.name[0] : 'U').toUpperCase(),
+                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              auth.currentUser?.name ?? 'Utilisateur',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            if (auth.currentUser?.email != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                auth.currentUser!.email,
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              ),
+            ],
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  auth.logout();
+                },
+                icon: const Icon(Icons.logout, color: Colors.red),
+                label: const Text('Déconnexion', style: TextStyle(color: Colors.red)),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.red),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildSkeleton() {
