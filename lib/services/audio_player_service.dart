@@ -12,6 +12,7 @@ class AudioPlayerService extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer();
   final LocalStorage _localStorage = LocalStorage();
   final ApiClient _apiClient = ApiClient();
+  final Map<String, String> _streamUrlCache = {};
 
   Song? _currentSong;
   bool _isPlaying = false;
@@ -105,6 +106,17 @@ class AudioPlayerService extends ChangeNotifier {
   }
 
   Future<String?> _getAudioUrl(String videoId) async {
+    if (_streamUrlCache.containsKey(videoId)) {
+      return _streamUrlCache[videoId];
+    }
+    try {
+      final data = await _apiClient.get('${ApiEndpoints.baseUrl}/music/stream-url/$videoId');
+      final url = data['url'] as String?;
+      if (url != null && url.isNotEmpty) {
+        _streamUrlCache[videoId] = url;
+        return url;
+      }
+    } catch (_) {}
     return '${ApiEndpoints.baseUrl}/music/stream/$videoId';
   }
 
@@ -126,9 +138,16 @@ class AudioPlayerService extends ChangeNotifier {
       return;
     }
 
+    final isDirectUrl = !url.contains(ApiEndpoints.baseUrl);
     await _player.setAudioSource(
       AudioSource.uri(
         Uri.parse(url),
+        headers: isDirectUrl
+            ? {
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15',
+                'Referer': 'https://www.youtube.com/',
+              }
+            : null,
         tag: MediaItem(
           id: song.videoId,
           title: song.title,
